@@ -1,0 +1,49 @@
+\documentclass[12pt,a4paper]{article}
+
+% Khai báo các gói hỗ trợ tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+
+% Gói hỗ trợ toán học
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+
+\section*{Phần 1: Cơ Sở Toán Học Của Tín Hiệu Âm Thanh \& Phép Biến Đổi Fourier}
+
+Trước khi yêu cầu máy tính xử lý bất kỳ đoạn âm thanh nào, chúng ta cần tìm một "ngôn ngữ chung" để kết nối thế giới vật lý và thế giới kỹ thuật số. Ngôn ngữ đó chính là Toán học.
+
+\vspace{0.5cm}
+\noindent\textbf{1. Phương trình sóng âm cơ bản: Hạt nhân của mọi nốt nhạc}
+
+Hãy tưởng tượng bạn gõ nhẹ vào một chiếc âm thoa. Âm thanh thuần khiết phát ra sẽ làm không khí rung động nhịp nhàng. Dưới lăng kính hình học, sự thay đổi áp suất không khí này vẽ ra một đường cong hoàn hảo trong không gian, được biểu diễn bằng phương trình lượng giác kinh điển:
+\[ y = A \sin(2\pi f t + \phi) \]
+Mỗi đại lượng trong phương trình này đều nắm giữ một "linh hồn" riêng của âm thanh:
+\begin{itemize}
+    \item \textbf{$A$ (Biên độ - Amplitude):} Quyết định âm lượng to hay nhỏ. Đồ thị dao động có biên độ càng lớn, âm thanh phát ra càng vang dội.
+    \item \textbf{$f$ (Tần số - Frequency):} Quyết định cao độ trầm hay bổng, đo bằng Hertz (Hz). Ví dụ, một nốt La (A4) chuẩn có tần số $440$ Hz, nghĩa là đồ thị hàm số $\sin$ sẽ thực hiện trọn vẹn $440$ chu kỳ dao động chỉ trong vỏn vẹn một giây.
+    \item \textbf{$t$ (Thời gian) và $\phi$ (Pha ban đầu):} Xác định mốc thời gian chuyển động của luồng sóng.
+\end{itemize}
+
+\vspace{0.5cm}
+\noindent\textbf{2. Định lý Fourier: "Lăng kính" bẻ gãy sự hỗn độn}
+
+Trong thực tế, âm thanh chúng ta nghe thấy hiếm khi là một nốt đơn độc. Khi bạn đánh một hợp âm trên đàn Piano, hoặc khi một ca sĩ cất tiếng hát, hàng chục luồng sóng âm đan xen, chồng lấp và giao thoa với nhau. Kết quả là trên trục thời gian, đồ thị sóng âm trở thành một đường cong nhấp nhô, gai góc và cực kỳ hỗn độn. Làm sao để giải mã mớ hỗn độn này?
+
+Đây là lúc thiên tài của nhà toán học Jean-Baptiste Joseph Fourier tỏa sáng. Ông đưa ra một định lý mang tính cách mạng: \textbf{Mọi tín hiệu tuần hoàn, dù có hình thù phức tạp và kỳ lạ đến đâu, cũng có thể được phân tách thành tổng của vô số các hàm số lượng giác cơ bản.}
+
+Giống như cách một chiếc lăng kính thủy tinh bẻ gãy ánh sáng trắng thành một dải cầu vồng bảy sắc, phép biến đổi Fourier bóc tách một khối âm thanh ồn ào thành những đường cong $\sin$ và $\cos$ trơn tru, độc lập. Nó cho phép ta nhìn thấu cấu trúc bên trong của âm thanh, chỉ ra chính xác nốt nhạc nào, với âm lượng bao nhiêu đang được ngân lên.
+
+\vspace{0.5cm}
+\noindent\textbf{3. Công thức Euler và Số phức: Chiếc chìa khóa vàng tối ưu thuật toán}
+
+Định lý Fourier rất tuyệt vời, nhưng nếu bắt máy tính thực hiện hàng triệu phép tính cộng các hàm lượng giác $\sin$ và $\cos$ cho một file âm thanh dài 3 phút, hệ thống sẽ trở nên quá tải. Để hiện thực hóa dự án này trên ngôn ngữ lập trình Python, chúng ta cần một công cụ tính toán thanh thoát hơn.
+
+Giải pháp nằm ở \textbf{Công thức Euler} – phương trình được mệnh danh là vẻ đẹp tuyệt mỹ nhất của toán học:
+\[ e^{ix} = \cos(x) + i\sin(x) \]
+Sự xuất hiện của số phức $i$ trong công thức này đã tạo ra một phép màu: Nó kết nối hình học (các hàm lượng giác $\sin$, $\cos$) với đại số (hàm số mũ). Thay vì phải tính toán hai hàm $\sin$ và $\cos$ cồng kềnh một cách riêng biệt, thuật toán máy tính giờ đây chỉ cần thực hiện các phép nhân số mũ cực kỳ đơn giản và gọn nhẹ. 
+
+Đây chính là nền tảng cốt lõi làm nên sức mạnh của thuật toán \textbf{FFT (Fast Fourier Transform)}. Nhờ sự tối ưu từ số phức, thuật toán này giúp máy tính bóc tách và phân tích các tệp âm thanh khổng lồ chỉ trong chớp mắt.
+
+\end{document}
