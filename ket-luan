@@ -1,0 +1,34 @@
+\documentclass[12pt,a4paper]{article}
+
+% Khai báo các gói hỗ trợ tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+
+\begin{document}
+
+% ==================== KẾT LUẬN ====================
+\section*{Kết Luận}
+
+\vspace{0.5cm}
+\noindent\textbf{1. Sự liên kết giữa toán học phổ thông và công nghệ hiện đại}
+
+Qua dự án "Phân tích không gian Fourier và Xử lý tín hiệu số", chúng ta đã cùng trải qua một hành trình kết nối những trang sách giáo khoa toán học cấp 3 với các công nghệ lõi của kỷ nguyên số. Dự án đã chứng minh một sự thật hấp dẫn: các hàm số lượng giác $\sin, \cos$, sự kỳ diệu của số phức hay các bài toán tích phân vô cực hoàn toàn không phải là những phương trình khô khan, vô hồn nằm im trên giấy. Thực chất, chúng chính là "mã nguồn" của thế giới vật lý. 
+
+Từ một định lý giải tích thuần túy của Fourier, kết hợp với sức mạnh của thuật toán tối ưu FFT và ngôn ngữ lập trình Python, chúng ta đã thành công bẻ gãy một khối âm thanh hỗn độn thành những tia sáng lượng giác độc lập. Dự án đã biến một đại lượng vật lý vô hình (âm thanh) thành những đồ thị kỹ thuật số sắc nét, minh chứng rõ ràng cho việc: Toán học phổ thông chính là nền tảng vận hành của mọi công nghệ xử lý tín hiệu hiện đại, từ định dạng nhạc MP3 cho đến mạng viễn thông không dây.
+
+\vspace{0.5cm}
+\noindent\textbf{2. Vẻ đẹp giao thoa giữa Toán học thuần túy và Khoa học Máy tính}
+
+Về mặt cá nhân, dự án này không chỉ là một bài tập Tích hợp liên môn mà còn là một trải nghiệm thay đổi tư duy sâu sắc về vẻ đẹp giao thoa giữa Toán học và Công nghệ Thông tin. 
+
+Toán học thuần túy mang đến vẻ đẹp của chân lý tuyệt đối và sự logic hoàn mỹ, nhưng đôi khi sự trừu tượng của nó vượt quá khả năng hình dung của con người. Ngược lại, Khoa học Máy tính mang đến tốc độ và khả năng thực thi khổng lồ, nhưng lại cần một "linh hồn" lý thuyết vững chắc để dẫn đường. Khi hai lĩnh vực này hòa quyện, chúng ta có được thuật toán Fast Fourier Transform – một tuyệt tác trí tuệ của nhân loại. Công nghệ đã "thổi hồn", biến các phương trình tĩnh lặng thành những biểu đồ chuyển động trực quan; và ngược lại, chính sự đối xứng hoàn hảo của toán học (công thức Euler) đã tối ưu hóa, cứu nền công nghệ máy tính khỏi sự sụp đổ của khối lượng dữ liệu khổng lồ.
+
+Cuối cùng, dự án này đã thay đổi hoàn toàn lăng kính của chúng em đối với môn Toán. Toán học không còn là những con số để đối phó trong các kỳ thi, mà thực sự là một chiếc lăng kính vĩ đại, giúp con người bóc tách và thấu hiểu mọi sự dao động của vũ trụ.
+
+\vspace{1cm}
+\begin{center}
+    \textit{--- HẾT ---}
+\end{center}
+
+\end{document}
