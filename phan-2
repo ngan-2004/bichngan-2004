@@ -1,0 +1,112 @@
+\documentclass[12pt,a4paper]{article}
+
+% Khai báo các gói hỗ trợ tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+
+% Gói hỗ trợ toán học và hình ảnh
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+
+% Gói lệnh cho khung màu sắc
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+
+% Gói lệnh vẽ biểu đồ trực tiếp
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+% ==================== PHẦN 2 ====================
+\section*{Phần 2: Ứng Dụng Thuật Toán FFT Bằng Python}
+
+Nếu Phần 1 là linh hồn toán học, thì Phần 2 chính là thể xác công nghệ. Để chuyển hóa những phương trình tích phân vô hạn thành công cụ phân tích tín hiệu âm thanh thực tế, chúng ta phải nhờ đến sức mạnh của Khoa học Máy tính và nghệ thuật lập trình.
+
+\vspace{0.5cm}
+
+% --- KHUNG MÀU XANH DƯƠNG CHO LÝ THUYẾT FFT ---
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=\textbf{1. Sự ra đời của Fast Fourier Transform (FFT)}]
+Khi chuyển đổi Phép biến đổi Fourier sang không gian rời rạc (DFT - Discrete Fourier Transform) để máy tính có thể xử lý, các nhà khoa học vấp phải một "bức tường" giới hạn phần cứng cực lớn. Thuật toán DFT truyền thống tính toán bằng cách đối chiếu từng điểm dữ liệu với mọi điểm khác, dẫn đến độ phức tạp là $O(N^2)$. Giả sử chúng ta có một đoạn âm thanh stereo chuẩn CD dài chỉ 1 phút, tương đương khoảng $2.6$ triệu điểm lấy mẫu. Nếu dùng DFT, vi xử lý sẽ phải gánh vác gần $7$ nghìn tỷ phép tính – một khối lượng khổng lồ khiến việc phân tích tín hiệu thời gian thực (real-time) là bất khả thi.
+
+Lịch sử thay đổi vào năm 1965, khi hai nhà toán học J.W. Cooley và J.W. Tukey công bố thuật toán \textbf{Fast Fourier Transform (FFT)}. Thực chất, ý tưởng cốt lõi đã được Carl Friedrich Gauss nhen nhóm từ năm 1805, nhưng Cooley và Tukey đã hoàn thiện nó cho kỷ nguyên máy tính. Bằng cách áp dụng triết lý "chia để trị" (divide and conquer) – chia nhỏ ma trận dữ liệu và khai thác triệt để tính chất tuần hoàn, đối xứng của các nghiệm số phức trên vòng tròn đơn vị, FFT đã triệt tiêu hàng loạt các phép tính thừa. Độ phức tạp thuật toán đột ngột giảm xuống chỉ còn $O(N \log N)$. Nhờ "phép màu" toán học này, $7$ nghìn tỷ phép tính được rút gọn xuống chỉ còn khoảng $50$ triệu, nén thời gian thực thi từ hàng giờ xuống chưa tới một phần nghìn giây.
+\end{tcolorbox}
+
+% HÌNH ẢNH 1: TỰ VẼ BẰNG PGFPLOTS
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=10cm, height=6.5cm,
+            xlabel={Số lượng điểm dữ liệu $N$},
+            ylabel={Số phép tính},
+            xmode=log, ymode=log,
+            grid=both,
+            grid style={dashed, gray!30},
+            legend pos=north west,
+            title={\textbf{So sánh tốc độ: DFT vs FFT}}
+        ]
+        % Vẽ đường O(N^2) cho DFT
+        \addplot[color=red, thick, domain=10:1000, samples=50] {x^2};
+        \addlegendentry{DFT ($O(N^2)$)}
+        
+        % Vẽ đường O(N log N) cho FFT
+        \addplot[color=blue, thick, domain=10:1000, samples=50] {x * ln(x)/ln(2)};
+        \addlegendentry{FFT ($O(N \log N)$)}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Biểu đồ minh họa sự bùng nổ khối lượng tính toán giữa thuật toán DFT truyền thống và thuật toán FFT. Đường màu xanh (FFT) cho thấy sự tối ưu vượt trội khi dữ liệu lớn.}
+\end{figure}
+
+\vspace{0.5cm}
+
+% --- KHUNG MÀU XANH LÁ CHO PYTHON ---
+\begin{tcolorbox}[colback=green!5!white, colframe=green!60!black, title=\textbf{2. Cài đặt môi trường lập trình và các thư viện hỗ trợ}]
+Để hiện thực hóa thuật toán bóc tách âm thanh, dự án lựa chọn \textbf{Python} – ngôn ngữ đang thống trị lĩnh vực Khoa học Dữ liệu. Dù Python là ngôn ngữ thông dịch (thường có tốc độ chạy chậm hơn C/C++), nhưng nhược điểm này được khắc phục hoàn toàn nhờ hệ sinh thái thư viện lõi chuyên dụng:
+\begin{itemize}
+    \item \textbf{NumPy (Numerical Python):} Không gian kỹ thuật số biểu diễn âm thanh dưới dạng một vector tuyến tính khổng lồ. NumPy cung cấp cấu trúc dữ liệu \texttt{ndarray} cho phép tính toán song song (vectorization), giúp nhào nặn các ma trận hàng triệu chiều với tốc độ siêu việt mà không cần dùng đến các vòng lặp \texttt{for} chậm chạp.
+    \item \textbf{SciPy (\texttt{scipy.fft}):} Đây là "trái tim" thuật toán của dự án. Module này chứa bộ mã FFT đã được biên dịch sẵn và tối ưu hóa ở mức thấp nhất bằng ngôn ngữ C/Fortran. Nó đóng vai trò như một cỗ máy nghiền dữ liệu, thực thi các phép biến đổi không gian từ miền thời gian sang miền tần số một cách chớp nhoáng và độ chính xác cực cao.
+    \item \textbf{Matplotlib:} Nếu SciPy là bộ não phân tích, thì Matplotlib là đôi mắt. Thư viện này hoạt động như một chiếc cọ vẽ kỹ thuật số, giúp chuyển đổi hàng triệu con số vô tri thành những biểu đồ sóng âm (Waveform) sinh động và các phổ tần số (Spectrogram) trực quan, cho phép ta "nhìn thấy" âm thanh bằng mắt thường.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+% --- KHUNG MÀU CAM CHO ĐỊNH DẠNG ÂM THANH ---
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!80!black, title=\textbf{3. Đọc và trích xuất ma trận số từ file âm thanh \texttt{.wav}}]
+Bước đầu tiên của mọi hệ thống xử lý tín hiệu là quá trình số hóa (Digitization). Dự án sử dụng tệp âm thanh đầu vào mang định dạng \texttt{.wav} (được mã hóa theo chuẩn PCM - Pulse-Code Modulation). Khác với MP3 đã bị nén và làm mất dữ liệu, \texttt{.wav} bảo toàn trung thực $100\%$ sự thay đổi áp suất vật lý của sóng âm ngoài đời thực. Thông qua module \texttt{scipy.io.wavfile}, chương trình sẽ trích xuất thành công hai tham số nền tảng:
+\begin{itemize}
+    \item \textbf{Tần số lấy mẫu (Sample Rate - $f_s$):} Thường được thiết lập ở mức $44100$ Hz. Theo \textbf{Định lý lấy mẫu Nyquist-Shannon}, để tái tạo hoàn hảo một tín hiệu, tần số lấy mẫu phải lớn hơn ít nhất hai lần tần số tối đa của tín hiệu đó. Do tai người nghe được tối đa $20000$ Hz, ngưỡng $44100$ Hz là tiêu chuẩn vàng để đảm bảo không một chi tiết âm thanh nào bị bỏ sót.
+    \item \textbf{Ma trận biên độ (Audio Data Array):} Một mảng số nguyên biểu diễn cường độ dao động tại mỗi thời điểm. Với chuẩn âm thanh 16-bit, máy tính cung cấp không gian phân giải $2^{16} = 65536$ mức độ âm lượng khác nhau (trải dài từ $-32768$ đến $32767$). Sự biến thiên của các con số này trong ma trận chính là bức tranh toàn cảnh về cách sóng âm đập vào màng micro.
+\end{itemize}
+\end{tcolorbox}
+
+% HÌNH ẢNH 2: TỰ VẼ BẰNG PGFPLOTS
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=12cm, height=5cm,
+            xlabel={Thời gian $t$},
+            ylabel={Biên độ (Amplitude)},
+            ymin=-1.5, ymax=1.5,
+            axis lines=middle,
+            samples=100,
+            domain=0:2*pi,
+            legend style={at={(0.5,-0.2)},anchor=north,legend columns=-1}
+        ]
+        % Vẽ sóng liên tục (Analog)
+        \addplot[color=gray, thick, smooth] {sin(deg(x))};
+        \addlegendentry{Sóng Analog (Liên tục)}
+        
+        % Vẽ các điểm rời rạc (Digital Sampling)
+        \addplot[ycomb, color=blue, mark=*, samples=20] {sin(deg(x))};
+        \addlegendentry{Điểm lấy mẫu Digital}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Minh họa quá trình số hóa tín hiệu. Sóng âm liên tục (đường màu xám) được máy tính "chụp" lại thành các giá trị rời rạc (cột màu xanh) theo một tần số lấy mẫu cố định.}
+\end{figure}
+
+\end{document}
