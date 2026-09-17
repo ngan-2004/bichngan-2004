@@ -1,0 +1,121 @@
+\documentclass[12pt,a4paper]{article}
+
+% Khai báo các gói hỗ trợ tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+
+% Gói hỗ trợ toán học và hình ảnh
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+
+% Gói lệnh cho khung màu sắc
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+
+% Gói lệnh vẽ biểu đồ trực tiếp
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+% ==================== PHẦN 3 ====================
+\section*{Phần 3: Trực Quan Hóa Và Phân Tích Thực Nghiệm}
+
+Sau khi đã xây dựng thành công bộ khung thuật toán bằng Python, dự án tiến hành phân tích thực nghiệm trên các mẫu âm thanh thực tế. Mục tiêu của phần này là quan sát sự đối lập giữa đồ thị miền thời gian (Time Domain) và phổ tần số (Frequency Domain), qua đó chứng minh sức mạnh bóc tách của phép biến đổi Fourier.
+
+\vspace{0.5cm}
+
+% --- KHUNG MÀU TÍM CHO BÀI TOÁN 1 ---
+\begin{tcolorbox}[colback=purple!5!white, colframe=purple!75!black, title=\textbf{Bài toán 1: Phân tích âm thanh đơn giản (Tiếng âm thoa)}]
+Mẫu thử nghiệm đầu tiên là tiếng gõ của một chiếc âm thoa (Tuning fork) chuẩn nốt La (A4). 
+\begin{itemize}
+    \item \textbf{Trên miền thời gian (Time Domain):} Đồ thị hiển thị một đường cong hình $\sin$ trơn tru, hoàn hảo và lặp lại đều đặn. Điều này phản ánh tính chất vật lý của âm thoa: nó chỉ dao động ở duy nhất một tần số cơ bản.
+    \item \textbf{Trên miền tần số (Frequency Domain):} Khi thuật toán FFT quét qua ma trận dữ liệu, phổ tần số trả về một mặt phẳng tĩnh lặng, ngoại trừ một đỉnh nhọn (peak) duy nhất vút lên tại mốc $440$ Hz. Toán học đã chứng minh chính xác những gì tai chúng ta nghe thấy: Âm thanh này được cấu tạo từ một hàm số duy nhất:
+    \[ y(t) = A \sin(2\pi \cdot 440 \cdot t) \]
+\end{itemize}
+\end{tcolorbox}
+
+% HÌNH ẢNH 3: TỰ VẼ BẰNG PGFPLOTS (BÀI TOÁN 1)
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        % Đồ thị miền thời gian
+        \begin{axis}[
+            width=7.5cm, height=5cm,
+            title={\textbf{Miền thời gian (Âm thoa)}},
+            xlabel={Thời gian $t$}, ylabel={Biên độ},
+            domain=0:4*pi, samples=100,
+            axis lines=middle, xtick=\empty, ytick=\empty
+        ]
+        \addplot[color=blue, thick] {sin(deg(x))};
+        \end{axis}
+    \end{tikzpicture}
+    \hfill
+    \begin{tikzpicture}
+        % Đồ thị miền tần số
+        \begin{axis}[
+            width=7.5cm, height=5cm,
+            title={\textbf{Miền tần số (Phổ FFT)}},
+            xlabel={Tần số (Hz)}, ylabel={Độ lớn},
+            xmin=0, xmax=1000, ymin=0, ymax=1.2,
+            axis lines=middle, xtick={440}, xticklabels={440},
+            ytick=\empty
+        ]
+        \addplot[ycomb, color=red, thick, mark=*] coordinates {(440,1)};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Phân tích tiếng âm thoa. Đồ thị hàm $\sin$ hoàn hảo trên miền thời gian (trái) tương ứng với một đỉnh tần số duy nhất tại $440$ Hz trên miền tần số (phải).}
+\end{figure}
+
+\vspace{0.5cm}
+
+% --- KHUNG MÀU ĐỎ ĐÔ CHO BÀI TOÁN 2 ---
+\begin{tcolorbox}[colback=red!5!white, colframe=red!70!black, title=\textbf{Bài toán 2: Phân tích âm thanh phức tạp (Hợp âm Piano)}]
+Thử thách thực sự của thuật toán nằm ở các mẫu âm thanh phức tạp, ví dụ như khi người nghệ sĩ nhấn cùng lúc 3 phím Đô - Mi - Sol để tạo thành hợp âm Đô trưởng (C Major) trên đàn Piano.
+\begin{itemize}
+    \item \textbf{Sự hỗn độn trên miền thời gian:} Khác với âm thoa, đồ thị của hợp âm Piano là sự giao thoa chồng chéo của hàng chục luồng sóng âm khác nhau. Trên trục thời gian, ta chỉ thấy một dải dữ liệu gai góc, nhấp nhô không rõ hình thù.
+    \item \textbf{Sự bóc tách trên miền tần số:} Khi chạy qua lăng kính FFT, sự hỗn độn biến mất, nhường chỗ cho một trật tự toán học tuyệt đẹp. Đồ thị phổ xuất hiện 3 đỉnh nhọn khổng lồ, tương ứng với 3 tần số cơ bản của nốt Đô ($261.6$ Hz), Mi ($329.6$ Hz), và Sol ($392.0$ Hz). 
+    \item \textbf{Khám phá "Âm sắc" (Timbre):} Đặc biệt hơn, bên cạnh 3 đỉnh chính, FFT còn vạch trần hàng loạt các đỉnh phụ nhỏ hơn vút lên ở các bội số nguyên ($2f, 3f, 4f\dots$). Đây chính là các "họa âm" (Harmonics) đặc trưng của dây đàn Piano. Toán học chứng minh rằng, hợp âm này là một chuỗi Fourier phức hợp:
+    \[ S(t) = \sum_{n=1}^{N} A_n \sin(2\pi f_n t + \phi_n) \]
+\end{itemize}
+\end{tcolorbox}
+
+% HÌNH ẢNH 4: TỰ VẼ BẰNG PGFPLOTS (BÀI TOÁN 2)
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        % Đồ thị miền thời gian (Sóng phức tạp)
+        \begin{axis}[
+            width=7.5cm, height=5cm,
+            title={\textbf{Miền thời gian (Piano)}},
+            xlabel={Thời gian $t$}, ylabel={Biên độ},
+            domain=0:4*pi, samples=200,
+            axis lines=middle, xtick=\empty, ytick=\empty
+        ]
+        \addplot[color=blue, thick] {sin(deg(x)) + 0.6*sin(deg(2.5*x)) + 0.4*sin(deg(4*x)) + 0.2*sin(deg(7*x))};
+        \end{axis}
+    \end{tikzpicture}
+    \hfill
+    \begin{tikzpicture}
+        % Đồ thị miền tần số (Nhiều đỉnh)
+        \begin{axis}[
+            width=7.5cm, height=5cm,
+            title={\textbf{Miền tần số (Phổ FFT)}},
+            xlabel={Tần số (Hz)}, ylabel={Độ lớn},
+            xmin=0, xmax=800, ymin=0, ymax=1.2,
+            axis lines=middle, 
+            xtick={261, 329, 392}, xticklabels={C, E, G},
+            ytick=\empty
+        ]
+        % Các đỉnh tần số cơ bản
+        \addplot[ycomb, color=red, thick, mark=*] coordinates {(261,1) (329,0.8) (392,0.9)};
+        % Các đỉnh họa âm nhỏ hơn
+        \addplot[ycomb, color=orange, thick, mark=*] coordinates {(522,0.4) (658,0.3) (784,0.35)};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Phân tích hợp âm Đô trưởng (C Major). Đồ thị sóng âm hỗn độn (trái) được bóc tách thành các tần số độc lập của nốt C, E, G cùng các họa âm đi kèm (phải).}
+\end{figure}
+
+\end{document}
