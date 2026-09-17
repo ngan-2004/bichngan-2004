@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper]{article}
+
+% Khai báo các gói hỗ trợ tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+
+\begin{document}
+
+% ==================== TRANG BÌA ====================
+\begin{titlepage}
+    \begin{center}
+        % Tên trường
+        {\Large \textbf{ĐẠI HỌC HUẾ}} \\[0.2cm]
+        {\Large \textbf{TRƯỜNG ĐẠI HỌC SƯ PHẠM}} \\[0.5cm]
+        
+        % Đường kẻ ngang trang trí
+        \rule{8cm}{0.8pt}
+        
+        \vfill % Tự động giãn cách đều
+        
+        % Tên môn học
+        {\large BÁO CÁO MÔN HỌC} \\[0.5cm]
+        {\Large \textbf{TÍCH HỢP CÔNG NGHỆ THÔNG TIN TRONG DẠY HỌC TOÁN}} 
+        
+        \vfill % Tự động giãn cách đều
+
+        % Tên đề tài
+        {\Large \textbf{TÊN ĐỀ TÀI:}} \\[0.8cm]
+        {\huge \textbf{PHÂN TÍCH FOURIER CĂN BẢN:\\[0.4cm] DÙNG MÃ PHÂN TÍCH HÀM LƯỢNG GIÁC\\[0.2cm] TRONG TÍN HIỆU ÂM THANH}} 
+        
+        \vfill % Tự động giãn cách đều
+
+        % Thông tin sinh viên & GVHD
+        \begin{flushright}
+            \large
+            \begin{tabular}{ll}
+                \textbf{Giảng viên hướng dẫn:} & Nguyễn Đăng Minh Phúc \\[0.3cm]
+                \textbf{Sinh viên thực hiện:} & Phạm Thị Bích Ngân \\[0.3cm]
+                \textbf{Mã sinh viên:} & 22S1010060 \\[0.3cm]
+                \textbf{Lớp:} & Toán 4A \\
+            \end{tabular}
+        \end{flushright}
+
+        \vfill % Tự động đẩy dòng địa điểm xuống sát đáy trang
+
+        % Địa điểm, thời gian
+        {\large \textbf{Thừa Thiên Huế, Năm 2026}}
+    \end{center}
+\end{titlepage}
+
+\end{document}
